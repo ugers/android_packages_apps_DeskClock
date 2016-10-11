@@ -80,6 +80,10 @@ public class CountingTimerView extends View {
     private boolean mVirtualButtonEnabled = false;
     private boolean mVirtualButtonPressedOn = false;
 
+    private String secUnit, minUnit, hourUnit;
+    private Paint unitPaint;
+    private boolean isShowUnit;
+
     Runnable mBlinkThread = new Runnable() {
         private boolean mVisible = true;
         @Override
@@ -254,6 +258,10 @@ public class CountingTimerView extends View {
             }
             return drawTime(canvas, time, ii, x, y) + getLabelWidth();
         }
+
+        public Paint getPaint() {
+            return mPaint;
+        }
     }
 
     @SuppressWarnings("unused")
@@ -271,6 +279,12 @@ public class CountingTimerView extends View {
                 context, R.attr.colorAccent, Color.RED);
         mBigFontSize = r.getDimension(R.dimen.big_font_size);
         mSmallFontSize = r.getDimension(R.dimen.small_font_size);
+
+        secUnit = r.getString(R.string.stopwatch_time_second);
+        minUnit = r.getString(R.string.stopwatch_time_minute);
+        hourUnit = r.getString(R.string.stopwatch_time_hour);
+
+        isShowUnit = r.getBoolean(R.bool.show_unit_on_deskclock);
 
         Typeface androidClockMonoThin = Typeface.
                 createFromAsset(context.getAssets(), "fonts/AndroidClockMono-Thin.ttf");
@@ -297,6 +311,11 @@ public class CountingTimerView extends View {
         mMedHundredths = new Hundredths(mPaintMed, HUNDREDTHS_SPACING, allDigits);
 
         mRadiusOffset = Utils.calculateRadiusOffset(r);
+
+        unitPaint = new Paint();
+        unitPaint.setAntiAlias(true);
+        unitPaint.setTextSize(mBigMinutes.getPaint().getTextSize()/10);
+        unitPaint.setColor(mBigMinutes.getPaint().getColor());
     }
 
     protected void resetTextSize() {
@@ -631,12 +650,27 @@ public class CountingTimerView extends View {
         if (mHours != null) {
             xTextStart = mBigHours.draw(canvas, mHours, xTextStart, yTextStart);
         }
+
+        if(isShowUnit) {
+            canvas.drawText(hourUnit, xTextStart - unitPaint.getTextSize(), yTextStart - unitPaint.getTextSize() * 4, unitPaint);
+        }
+
         if (mMinutes != null) {
             xTextStart = mBigMinutes.draw(canvas, mMinutes, xTextStart, yTextStart);
         }
+
+        if(isShowUnit) {
+            canvas.drawText(minUnit, xTextStart - unitPaint.getTextSize(), yTextStart - unitPaint.getTextSize() * 4, unitPaint);
+        }
+
         if (mSeconds != null) {
             xTextStart = mBigSeconds.draw(canvas, mSeconds, xTextStart, yTextStart);
         }
+
+        if(isShowUnit) {
+            canvas.drawText(secUnit, xTextStart, yTextStart - unitPaint.getTextSize() * 4, unitPaint);
+        }
+
         if (mHundredths != null) {
             mMedHundredths.draw(canvas, mHundredths, xTextStart, yTextStart);
         }

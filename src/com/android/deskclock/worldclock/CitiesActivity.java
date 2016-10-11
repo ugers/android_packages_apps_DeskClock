@@ -560,23 +560,23 @@ public class CitiesActivity extends BaseActivity implements OnCheckedChangeListe
 
         MenuItem searchMenu = menu.findItem(R.id.menu_item_search);
         mSearchView = (SearchView) MenuItemCompat.getActionView(searchMenu);
-        mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
-        mSearchView.setOnSearchClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                mSearchMode = true;
-            }
-        });
-        mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
-
-            @Override
-            public boolean onClose() {
-                mSearchMode = false;
-                return false;
-            }
-        });
         if (mSearchView != null) {
+            mSearchView.setImeOptions(EditorInfo.IME_FLAG_NO_EXTRACT_UI);
+            mSearchView.setOnSearchClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    mSearchMode = true;
+                }
+            });
+            mSearchView.setOnCloseListener(new SearchView.OnCloseListener() {
+
+                @Override
+                public boolean onClose() {
+                    mSearchMode = false;
+                    return false;
+                }
+            });
             mSearchView.setOnQueryTextListener(this);
             mSearchView.setQuery(mQueryTextBuffer.toString(), false);
             if (mSearchMode) {
